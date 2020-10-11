@@ -13,12 +13,36 @@ import asyncio
 import json
 import logging
 import websockets
+import pickle
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import StandardScaler
 
 SUBMIT = {"city": "", "month": "", "day": ""}
 USERS = set()
 
 def submit_event():
-    return json.dumps({"type": "submit", "predictValue": "999"})
+  # Restore model
+  with open('model.pkl', 'rb') as f: 
+    model = pickle.load(f)
+  
+  # Restore cleaned data
+  with open('cleanedData.pkl', 'rb') as f: 
+    wind_speed_df = pickle.load(f)
+
+  filtered_df = wind_speed_df[[SUBMIT['city'], 'Month', 'Day', 'Year', 'Time']].copy()
+  filtered_df = filtered_df[filtered_df['Month'] == SUBMIT['month']]
+  filtered_df = filtered_df[filtered_df['Day'] == SUBMIT['day']]
+
+  x = filtered_df.drop(SUBMIT['city'], axis=1)
+  y = filtered_df[SUBMIT['city']]
+
+  standardscaler = StandardScaler()
+  standardscaler.fit(x)
+  x_scale = standardscaler.fit_transform(x)
+
+  prediction = model.predict(x_scale)
+  return json.dumps({"type": "submit", "predictValue": str(prediction)})
 
 async def notify_submit():
     if USERS: # asyncio.wait doesn't accept an empty list
