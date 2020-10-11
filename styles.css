@@ -21,8 +21,7 @@ body {
     font-family: 'Oswald', sans-serif;
     color: #f1f1f1;
     padding: 30px 0px 0px 0px;
-    justify-content: center;
-    align-items: center;
+    text-align: center;
 }
 
 #subtitle {
@@ -67,10 +66,10 @@ body {
 }
 
 #results {
-    font-size: 1em;
+    font-size: 1.25em;
     font-family: 'Oswald', sans-serif;
-    color: #333333;
-    padding: 10px;
+    color: #f1f1f1;
+    padding: 30px;
     border: none;
     border-radius: 4px;
 }

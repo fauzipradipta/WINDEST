@@ -33,14 +33,32 @@ var cityNames = {
     "vancouver": "Vancouver",
 }
 
+var months = ["January", "February", "March", "April", "May", "June",
+              "July", "August", "September", "October", "November", "December"];
+
+function suffix(n) {
+    if (n >= 11 && n <= 13) { return "th"; }
+    n %= 10;
+    if (n == 1) { return "st"; }
+    if (n == 2) { return "nd"; }
+    if (n == 3) { return "rd"; }
+    return "th";
+}
+
+function printResults() {
+    $("#results").html("The predicted wind speed in " + cityNames[$("#cities").val()] +
+                        " on " + months[month - 1] + " " + day + suffix(day) + ", " + year +
+                        " is " + predictValue + " m/s.");
+}
+
 $('#submit').on('click', function() {
-    $("#results").html("Selected City: " + cityNames[$("#cities").val()]);
+    // $("#results").html("Selected City: " + cityNames[$("#cities").val()]);
 
     var date = $('#date').val().split("-");
     day = date[2];
     month = date[1];
     year = date[0];
-    $("#results").append("<br>Date: " + day + ", Month: " + month + ", Year: "+ year);
+    // $("#results").append("<br>Date: " + day + ", Month: " + month + ", Year: "+ year);
 
     // If a city isn't chosen
     if ($("#cities").val() === "") {
@@ -59,7 +77,6 @@ $('#submit').on('click', function() {
         month: month,
         day: day
     }));
-
 })
 
 function showResult(prediction) {
@@ -78,6 +95,6 @@ websocket.onmessage =  function (event) {
         case 'submit':
             console.log("Submit message received!");
             showResult(data.predictValue);
+            printResults();
     }
 };
-
