@@ -23,11 +23,11 @@ USERS = set()
 
 def submit_event():
   # Restore model
-  with open('model.pkl', 'rb') as f: 
+  with open('model.pkl', 'rb') as f:
     model = pickle.load(f)
-  
+
   # Restore cleaned data
-  with open('cleanedData.pkl', 'rb') as f: 
+  with open('cleanedData.pkl', 'rb') as f:
     wind_speed_df = pickle.load(f)
 
   filtered_df = wind_speed_df[[SUBMIT['city'], 'Month', 'Day', 'Year', 'Time']].copy()
@@ -40,6 +40,8 @@ def submit_event():
   standardscaler = StandardScaler()
   standardscaler.fit(x)
   x_scale = standardscaler.fit_transform(x)
+
+  model.fit(x_scale, y)
 
   prediction = sum(model.predict(x_scale))/len(x_scale)
   return json.dumps({"type": "submit", "predictValue": str(prediction)})
