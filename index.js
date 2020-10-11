@@ -47,8 +47,8 @@ function suffix(n) {
 
 function printResults() {
     $("#results").html("The predicted wind speed in " + cityNames[$("#cities").val()] +
-                        " on " + months[month - 1] + " " + day + suffix(day) + ", " + year +
-                        " is " + Math.round(predictValue * 1000) / 1000 + " m/s.");
+                        " on " + months[month - 1] + " " + parseInt(day) + suffix(day) + ", " + year +
+                        " is " + parseFloat(predictValue).toFixed(3) + " m/s.");
 }
 
 $('#submit').on('click', function() {
@@ -60,23 +60,19 @@ $('#submit').on('click', function() {
     year = date[0];
     // $("#results").append("<br>Date: " + day + ", Month: " + month + ", Year: "+ year);
 
-    // If a city isn't chosen
     if ($("#cities").val() === "") {
         $("#results").html("Please select a city.");
-    }
-
-    // If a date is chosen before 10/11/2020
-    if (date[0] < 2020 || (date[0] == 2020 && date[1] < 10) ||
+    } else if (date[0] < 2020 || (date[0] == 2020 && date[1] < 10) ||
         (date[0] == 2020 && date[1] == 10 && date[2] < 11)) {
         $("#results").html("Please select a date in the future.");
+    } else {
+        websocket.send(JSON.stringify({
+            action: 'submit',
+            city: cityNames[$("#cities").val()],
+            month: month,
+            day: day
+        }));
     }
-
-    websocket.send(JSON.stringify({
-        action: 'submit',
-        city: cityNames[$("#cities").val()],
-        month: month,
-        day: day
-    }));
 })
 
 function showResult(prediction) {
