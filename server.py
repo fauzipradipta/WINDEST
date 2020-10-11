@@ -41,7 +41,7 @@ def submit_event():
   standardscaler.fit(x)
   x_scale = standardscaler.fit_transform(x)
 
-  prediction = model.predict(x_scale)
+  prediction = sum(model.predict(x_scale))/len(x_scale)
   return json.dumps({"type": "submit", "predictValue": str(prediction)})
 
 async def notify_submit():
