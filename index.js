@@ -64,6 +64,7 @@ $('#submit').on('click', function() {
 
 function showResult(prediction) {
     predictValue = prediction;
+    console.log(predictValue)
     return 0;
 }
 
@@ -75,9 +76,8 @@ websocket.onmessage =  function (event) {
     }
     switch (data.type) {
         case 'submit':
-            console.log("Submit message received!")
-            var prediction = document.getElementById(data.prediction);
-            showResult(prediction);
+            console.log("Submit message received!");
+            showResult(data.predictValue);
     }
 };
 
