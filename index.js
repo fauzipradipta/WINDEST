@@ -1,4 +1,6 @@
 var day, month, year;
+var websocket = new WebSocket("ws://127.0.0.1:6789/");
+var predictValue;
 
 var cityNames = {
     "albuquerque": "Albuquerque",
@@ -50,4 +52,32 @@ $('#submit').on('click', function() {
         (date[0] == 2020 && date[1] == 10 && date[2] < 11)) {
         $("#results").html("Please select a date in the future.");
     }
-});
+
+    websocket.send(JSON.stringify({
+        action: 'submit',
+        city: $("#cities").val(),
+        month: month,
+        day: day
+    }));
+
+})
+
+function showResult(prediction) {
+    predictValue = prediction;
+    return 0;
+}
+
+//The websocket message handler, this code executes whenever we get a message from the server.
+websocket.onmessage =  function (event) {
+    data = JSON.parse(event.data);
+    if (!(data)){   //To get around a bug.
+        return
+    }
+    switch (data.type) {
+        case 'submit':
+            console.log("Submit message received!")
+            var prediction = document.getElementById(data.prediction);
+            showResult(prediction);
+    }
+};
+
