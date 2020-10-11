@@ -48,7 +48,7 @@ function suffix(n) {
 function printResults() {
     $("#results").html("The predicted wind speed in " + cityNames[$("#cities").val()] +
                         " on " + months[month - 1] + " " + day + suffix(day) + ", " + year +
-                        " is " + predictValue + " m/s.");
+                        " is " + Math.round(predictValue * 1000) / 1000 + " m/s.");
 }
 
 $('#submit').on('click', function() {
