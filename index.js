@@ -55,7 +55,7 @@ $('#submit').on('click', function() {
 
     websocket.send(JSON.stringify({
         action: 'submit',
-        city: $("#cities").val(),
+        city: cityNames[$("#cities").val()],
         month: month,
         day: day
     }));
