@@ -14,10 +14,11 @@ import json
 import logging
 import websockets
 
+SUBMIT = {"city": "", "month": "", "day": ""}
 USERS = set()
 
 def submit_event():
-    return json.dumps({"type": "submit", **SUBMIT})
+    return json.dumps({"type": "submit", "predictValue": "999"})
 
 async def notify_submit():
     if USERS: # asyncio.wait doesn't accept an empty list
@@ -40,8 +41,10 @@ async def counter(websocket, path):
             data = json.loads(message)
             print("message action is", data["action"])
             if data["action"] == "submit":
-                SUBMIT["prediction"] = data["prediction"]
-                SUBMIT["ID"] = data["ID"]
+                # SUBMIT["prediction"] = data["prediction"]
+                SUBMIT["city"] = data["city"]
+                SUBMIT["month"] = data["month"]
+                SUBMIT["day"] = data["day"]
                 await notify_submit()
             else:
                 logging.error("unsupported event: {}", data)
